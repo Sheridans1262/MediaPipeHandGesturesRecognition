@@ -29,10 +29,8 @@ class MediapipeHands:
             return result
 
     def processHandsFromVideo(self):
-        mp_drawing = mp.solutions.drawing_utils
-        mp_drawing_styles = mp.solutions.drawing_styles
-
         cap = cv2.VideoCapture(0)
+
         with self.mp_hands.Hands(
                 model_complexity=0,
                 min_detection_confidence=0.5,
@@ -59,17 +57,24 @@ class MediapipeHands:
                             A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
                     print(time.perf_counter() - start)
 
-                # image.flags.writeable = True
-                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-                # if results.multi_hand_landmarks:
-                #     for hand_landmarks in results.multi_hand_landmarks:
-                #         mp_drawing.draw_landmarks(
-                #             image,
-                #             hand_landmarks,
-                #             self.mp_hands.HAND_CONNECTIONS,
-                #             mp_drawing_styles.get_default_hand_landmarks_style(),
-                #             mp_drawing_styles.get_default_hand_connections_style())
-                # cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+                    self.showImageFromVideo(image, results)
+
                 if cv2.waitKey(1) == ord('q'):
                     break
         cap.release()
+
+    def showImageFromVideo(self, image, results):
+        image.flags.writeable = True
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        mp_drawing = mp.solutions.drawing_utils
+        mp_drawing_styles = mp.solutions.drawing_styles
+
+        for hand_landmarks in results.multi_hand_landmarks:
+            mp_drawing.draw_landmarks(
+                image,
+                hand_landmarks,
+                self.mp_hands.HAND_CONNECTIONS,
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style())
+        cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
