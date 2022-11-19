@@ -1,5 +1,6 @@
 import typing
 import numpy as np
+from math import sqrt, pow
 
 
 class Dot:
@@ -72,6 +73,9 @@ class Plane:
         ]))
 
         return det_Ai / det_A, det_Aj / det_A, det_Ak / det_A
+
+    def getLengthBetweenDots(self, dot_A, dot_B):
+        return sqrt(pow(dot_B.x - dot_A.x, 2) + pow(dot_B.y - dot_A.y, 2) + pow(dot_B.z - dot_A.z, 2))
 
     def __str__(self):
         return f"{self.a} {self.b} {self.c} {self.d}"

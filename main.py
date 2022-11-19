@@ -1,4 +1,4 @@
-import math
+from math import sqrt
 
 from mediapipe_hands import MediapipeHands
 from plane import Plane, Dot
