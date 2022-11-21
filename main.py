@@ -32,6 +32,10 @@ def mediapipeTest():
     #     A_proj = pl.getDotProjectionOnPlane(A)
     # print(1/(time.perf_counter() - start), " sec")
 
+    # pl = Plane(W, I, P)
+    # print(pl.dotProjectionOnLine(Dot(0, 1, -1), 2, 3, -6, -4, 1, 1))
+    # print(pl.getDotProjectionOnLine(Dot(0, 1, -1), Dot(2, -3, 0), Dot(1, -3, -5)))
+
 
 if __name__ == '__main__':
     main()
