@@ -3,20 +3,16 @@ from math import sqrt
 from mediapipe_hands import MediapipeHands
 from plane import Plane, Dot
 import time
+from knn_algorithm import KNN
+
 
 
 def main():
     mediapipeTest()
 
-def lengthAndAngle():
-    ...
-
-def twoLengths():
-    ...
-
 def mediapipeTest():
-    mpipe = MediapipeHands()
-    mpipe.processHandsFromVideo()
+    # mpipe = MediapipeHands()
+    # mpipe.processHandsFromVideo()
     # mpipe.processHandsFromImage("Images/one finger palm faced.jpg")
     # mpipe.processHandsFromImage("Images/two fingers palm away.jpg")
 
@@ -35,7 +31,10 @@ def mediapipeTest():
     # pl = Plane(W, I, P)
     # print(pl.dotProjectionOnLine(Dot(0, 1, -1), 2, 3, -6, -4, 1, 1))
     # print(pl.getDotProjectionOnLine(Dot(0, 1, -1), Dot(2, -3, 0), Dot(1, -3, -5)))
-
+    # KNN.defineGesture(Dot(7, 3, 5), "index")
+    start = time.perf_counter()
+    knn = KNN("db.json")
+    print(f"Time: {time.perf_counter() - start} sec")
 
 if __name__ == '__main__':
     main()

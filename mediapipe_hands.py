@@ -53,8 +53,8 @@ class MediapipeHands:
                         pl = Plane(hand_landmarks.landmark[HandLandmark.WRIST],
                                    hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
                                    hand_landmarks.landmark[HandLandmark.PINKY_MCP])
-                        for i in range(20):
-                            A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
+                        # for i in range(20):
+                        #     A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
                     print(time.perf_counter() - start)
 
                     self.showImageFromVideo(image, results)
