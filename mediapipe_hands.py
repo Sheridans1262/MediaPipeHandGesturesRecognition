@@ -48,16 +48,16 @@ class MediapipeHands:
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 start = time.perf_counter()
                 results = hands.process(image)
-                if results.multi_hand_landmarks:
-                    for hand_landmarks in results.multi_hand_landmarks:
-                        pl = Plane(hand_landmarks.landmark[HandLandmark.WRIST],
-                                   hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
-                                   hand_landmarks.landmark[HandLandmark.PINKY_MCP])
-                        # for i in range(20):
-                        #     A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
-                    print(time.perf_counter() - start)
+                # if results.multi_hand_landmarks:
+                #     for hand_landmarks in results.multi_hand_landmarks:
+                #         pl = Plane(hand_landmarks.landmark[HandLandmark.WRIST],
+                #                    hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
+                #                    hand_landmarks.landmark[HandLandmark.PINKY_MCP])
+                #         for i in range(20):
+                #             A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
+                #     print(time.perf_counter() - start)
 
-                    self.showImageFromVideo(image, results)
+                self.showImageFromVideo(image, results)
 
                 if cv2.waitKey(1) == ord('q'):
                     break
@@ -70,11 +70,12 @@ class MediapipeHands:
         mp_drawing = mp.solutions.drawing_utils
         mp_drawing_styles = mp.solutions.drawing_styles
 
-        for hand_landmarks in results.multi_hand_landmarks:
-            mp_drawing.draw_landmarks(
-                image,
-                hand_landmarks,
-                self.mp_hands.HAND_CONNECTIONS,
-                mp_drawing_styles.get_default_hand_landmarks_style(),
-                mp_drawing_styles.get_default_hand_connections_style())
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                mp_drawing.draw_landmarks(
+                    image,
+                    hand_landmarks,
+                    self.mp_hands.HAND_CONNECTIONS,
+                    mp_drawing_styles.get_default_hand_landmarks_style(),
+                    mp_drawing_styles.get_default_hand_connections_style())
         cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))

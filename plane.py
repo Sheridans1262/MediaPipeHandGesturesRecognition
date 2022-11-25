@@ -1,20 +1,11 @@
 import typing
 import numpy as np
 from math import sqrt, pow
-
-
-class Dot:
-    def __init__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
-
-    def __str__(self):
-        return f"{self.x} {self.y} {self.z}"
+from extencions import Dot
 
 
 class Plane:
-    def __init__(self, dot_wrist, dot_index_mcp, dot_pinky_mcp):
+    def __init__(self, dot_wrist: Dot, dot_index_mcp: Dot, dot_pinky_mcp: Dot):
         self.dot_wrist = dot_wrist
         self.dot_index_mcp = dot_index_mcp
         self.dot_pinky_mcp = dot_pinky_mcp
@@ -30,7 +21,7 @@ class Plane:
         ...
 
 # Plane computing part
-    def computePlaneCoefficientsWithThreeDots(self, dot_A, dot_B, dot_C):
+    def computePlaneCoefficientsWithThreeDots(self, dot_A: Dot, dot_B: Dot, dot_C: Dot):
         """ Compute plane equation Ax+By+Cz+D=0 coefficients by given 3 dots """
         c1 = np.linalg.det(np.array([
             [dot_B.y - dot_A.y, dot_C.y - dot_A.y],
@@ -51,7 +42,7 @@ class Plane:
         d = c1 * (- dot_A.x) - c2 * (- dot_A.y) + c3 * (- dot_A.z)
         return a, b, c, d
 
-    def getPlaneEquation(self, dot_A, a, b, c, d):
+    def getPlaneEquation(self, dot_A: Dot, a, b, c, d):
         """ Get number, which represents position of dot related to given plane:
             positive/negative number - dot is on one of the sides of a plane,
             zero - dot belongs to a plane """

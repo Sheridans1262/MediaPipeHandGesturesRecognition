@@ -1,15 +1,25 @@
 import json
 from geometry_extencion import getDistanceBetweenDots
-from gesture import Gesture
+from extencions import Finger, Dot
+
 
 class KNN:
     def __init__(self, db_filename):
         self.gestures = {}
         self.getGestures(db_filename)
+        print(self.getDotsForFinger(Finger.thumb))
 
     def getGestures(self, db_filename):
         with open(db_filename) as file:
             self.gestures = json.load(file)
+
+    def getDotsForFinger(self, finger: Finger) -> dict:
+        result = {}
+        finger = str(finger.value)
+
+        for gesture in self.gestures.keys():
+            result.update({gesture: self.gestures[gesture][finger]})
+        return result
 
     # def defineGesture(self, palm):
     #     probabilities = []
