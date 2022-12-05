@@ -1,13 +1,56 @@
 from extencions import Dot
 import numpy as np
 from math import sqrt, pow
+from plane import Plane
+
+
+def getNormalizedDots(dot_wrist, dot_index_mcp, dot_pinky_mcp,
+                      dot_thumb, dot_index, dot_middle, dot_ring, dot_pinky):
+    """Get new dot coordinates for thumb-pinky dots"""
+    # Create main plain
+    main_pl = Plane()
+    main_pl.computePlaneCoefficientsWithThreeDots(dot_wrist, dot_index_mcp, dot_pinky_mcp)
+
+    # Create "counter" plane to main plane
+    counter_pl = Plane()
+    pinky_mcp_projection = getDotProjectionOnLine(dot_pinky_mcp, dot_index_mcp, dot_wrist)
+    counter_pl.computePlaneCoefficientsDotAndLine(dot_index_mcp, pinky_mcp_projection, dot_pinky_mcp)
+
+    # Compute sign on left side of the counter_plane
+    if counter_pl.getPlaneEquation(dot_pinky_mcp) >= 0:
+        sign_on_left_side_of_counter_pl = 1
+    else:
+        sign_on_left_side_of_counter_pl = -1
+
+    input_dots = [dot_thumb, dot_index, dot_middle, dot_ring, dot_pinky]
+    output_dots = [None, None, None, None, None]
+
+    # TODO: create class Line to store line coefficients,
+    #       now they are computed 5 times in getProjectionOnLine function
+    # Compute new coordinates of given dots
+    for index, dot in enumerate(input_dots):
+        projection_on_main_plane = getDotProjectionOnPlane(dot, main_pl)
+        projection_on_line = getDotProjectionOnLine(projection_on_main_plane, dot_index_mcp, dot_pinky_mcp)
+
+        x = getDistanceBetweenDots(dot_wrist, projection_on_line)
+
+        y = getDistanceBetweenDots(projection_on_line, projection_on_main_plane)
+        sign_of_x = counter_pl.getPlaneEquation(projection_on_main_plane)
+        if sign_on_left_side_of_counter_pl * sign_of_x <= 0:
+            y *= -1
+
+        z = getDistanceBetweenDots(projection_on_main_plane, dot)
+
+        output_dots[index] = Dot(x, y, z)
+
+    return output_dots
 
 
 # Dot projection on plane computing part
-def getDotProjectionOnPlane(dot_A: Dot, a, b, c, d):
+def getDotProjectionOnPlane(dot_A: Dot, plane: Plane):
     """ Get dot_A projection on given plane,
         using cramer method to solve linear equations """
-    x, y, z = cramerMethod(dot_A, a, b, c, d)
+    x, y, z = cramerMethod(dot_A, plane.a, plane.b, plane.c, plane.d)
     return Dot(x, y, z)
 
 
@@ -57,24 +100,16 @@ def getDotProjectionOnLine(dot_A: Dot, dot_line_a, dot_line_b):
 
 def dotProjectionOnLine(dot_A: Dot, a_top, a_bot, b_top, b_bot, c_top, c_bot):
     """ Get coordinates of a dot_A projection on a line, given by top-bot coefficients"""
-    a, b, c, d = computePlaneCoefficientsWithNormalVector(dot_A, a_bot, b_bot, c_bot)
+    pl = Plane()
+    pl.computePlaneCoefficientsWithNormalVector(dot_A, a_bot, b_bot, c_bot)
+
+    a, b, c, d = pl.a, pl.b, pl.c, pl.d
     # a*-a_top + a*a_bot*lam + b*-b_top + b*b_bot*lam + c*-c_top + c*c_bot*lam + d=0
     lam = (a * a_top + b * b_top + c * c_top - d) / (a * a_bot + b * b_bot + c * c_bot)
     x = -1 * a_top + a_bot * lam
     y = -1 * b_top + b_bot * lam
     z = -1 * c_top + c_bot * lam
     return x, y, z
-
-
-def computePlaneCoefficientsWithNormalVector(dot_A: Dot, a, b, c):
-    """ Compute plane equation Ax+By+Cz+D=0 coefficients by given dot
-        and normal vector to plane """
-    normal_vector = np.array([a, b, c])
-    a = normal_vector[0]
-    b = normal_vector[1]
-    c = normal_vector[2]
-    d = -1 * dot_A.x * normal_vector[0] + -1 * dot_A.y * normal_vector[1] + -1 * dot_A.z * normal_vector[2]
-    return a, b, c, d
 
 
 # Line computing part
