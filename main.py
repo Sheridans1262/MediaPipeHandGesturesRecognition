@@ -12,9 +12,9 @@ def main():
     mediapipeTest()
 
 def mediapipeTest():
-    # mpipe = MediapipeHands()
+    mpipe = MediapipeHands()
     # mpipe.processHandsFromVideo()
-    # mpipe.processHandsFromImage("Images/one finger palm faced.jpg")
+    mpipe.processHandsFromImage("Images/test1.jpg")
     # mpipe.processHandsFromImage("Images/two fingers palm away.jpg")
 
     # W = Dot(7, 3, 5)
@@ -34,7 +34,7 @@ def mediapipeTest():
     # print(pl.getDotProjectionOnLine(Dot(0, 1, -1), Dot(2, -3, 0), Dot(1, -3, -5)))
     # KNN.defineGesture(Dot(7, 3, 5), "index")
     # start = time.perf_counter()
-    knn = KNN("db.json")
+    # knn = KNN("db.json")
     # print(f"Time: {time.perf_counter() - start} sec")
 
 if __name__ == '__main__':

@@ -16,4 +16,4 @@ class Dot:
         self.z = z
 
     def __str__(self):
-        return f"{self.x} {self.y} {self.z}"
+        return f"x={self.x} y={self.y} z={self.z}"

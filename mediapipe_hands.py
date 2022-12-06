@@ -2,8 +2,11 @@ import time
 
 import cv2
 import mediapipe as mp
+from matplotlib import pyplot as plt
 from mediapipe.python.solutions.hands import HandLandmark
-from plane import Plane
+from extencions import Finger
+
+from dots_normalization import getNormalizedDots
 
 
 class MediapipeHands:
@@ -23,6 +26,21 @@ class MediapipeHands:
             if not result.multi_hand_world_landmarks:
                 return
 
+            if result.multi_hand_landmarks:
+                for hand_landmarks in result.multi_hand_landmarks:
+                    dots = getNormalizedDots(hand_landmarks.landmark[HandLandmark.WRIST],
+                                             hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
+                                             hand_landmarks.landmark[HandLandmark.PINKY_MCP],
+                                             hand_landmarks.landmark[HandLandmark.THUMB_TIP],
+                                             hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP],
+                                             hand_landmarks.landmark[HandLandmark.MIDDLE_FINGER_TIP],
+                                             hand_landmarks.landmark[HandLandmark.RING_FINGER_TIP],
+                                             hand_landmarks.landmark[HandLandmark.PINKY_TIP])
+
+                    for dot in dots:
+                        print(dot)
+
+                    self.plotDots(dots)
             for hand_world_landmarks in result.multi_hand_world_landmarks:
                 mp.solutions.drawing_utils.plot_landmarks(
                     hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
@@ -79,3 +97,19 @@ class MediapipeHands:
                     mp_drawing_styles.get_default_hand_landmarks_style(),
                     mp_drawing_styles.get_default_hand_connections_style())
         cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+
+    def plotDots(self, dots):
+        fig = plt.figure()
+        ax = fig.add_subplot(projection='3d')
+
+        markers = ["thumb", "index", "middle", "ring", "pinky"]
+        for index, dot in enumerate(dots):
+            ax.scatter(dot.x,dot.y, dot.z, label=markers[index])
+
+        ax.set_xlabel('X Label')
+        ax.set_ylabel('Y Label')
+        ax.set_zlabel('Z Label')
+
+        ax.legend(loc="best")
+
+        plt.show()
