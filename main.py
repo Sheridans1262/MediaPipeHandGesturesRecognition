@@ -14,7 +14,7 @@ def main():
 def mediapipeTest():
     mpipe = MediapipeHands()
     # mpipe.processHandsFromVideo()
-    mpipe.processHandsFromImage("Images/test1.jpg")
+    mpipe.processHandsFromImage("Images/test2.jpg")
     # mpipe.processHandsFromImage("Images/two fingers palm away.jpg")
 
     # W = Dot(7, 3, 5)
