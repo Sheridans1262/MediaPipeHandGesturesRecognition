@@ -12,6 +12,13 @@ def main():
     mediapipeTest()
 
 def mediapipeTest():
+    dot_A = Dot(0.672, 0.89, 0.000002509)
+    dot_B = Dot(0.412, 0.607, -0.269)
+    dot_C = Dot(0.819, 0.682, -0.299)
+    main_pl = Plane()
+    main_pl.computePlaneCoefficientsWithThreeDots(dot_A, dot_B, dot_C)
+    print(main_pl)
+
     mpipe = MediapipeHands()
     # mpipe.processHandsFromVideo()
     mpipe.processHandsFromImage("Images/test2.jpg")

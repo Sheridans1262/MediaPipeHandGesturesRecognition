@@ -9,6 +9,7 @@ def getDotProjectionOnPlane(dot_A: Dot, plane: Plane):
     """ Get dot_A projection on given plane,
         using cramer method to solve linear equations """
     x, y, z = cramerMethod(dot_A, plane.a, plane.b, plane.c, plane.d)
+
     return Dot(x, y, z)
 
 

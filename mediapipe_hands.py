@@ -4,7 +4,7 @@ import cv2
 import mediapipe as mp
 from matplotlib import pyplot as plt
 from mediapipe.python.solutions.hands import HandLandmark
-from extencions import Finger
+from extencions import Finger, Dot
 
 from dots_normalization import getNormalizedDots
 
@@ -28,6 +28,12 @@ class MediapipeHands:
 
             if result.multi_hand_landmarks:
                 for hand_landmarks in result.multi_hand_landmarks:
+                    # Debug info
+                    print(f"Wrist: {Dot(hand_landmarks.landmark[HandLandmark.WRIST].x, hand_landmarks.landmark[HandLandmark.WRIST].y, hand_landmarks.landmark[HandLandmark.WRIST].z)}")
+                    print(f"Index mcp: {Dot(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].x, hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].y, hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].z)}")
+                    print(f"Pinky mcp: {Dot(hand_landmarks.landmark[HandLandmark.PINKY_MCP].x, hand_landmarks.landmark[HandLandmark.PINKY_MCP].y, hand_landmarks.landmark[HandLandmark.PINKY_MCP].z)}\n")
+                    # Debug info
+
                     dots = getNormalizedDots(hand_landmarks.landmark[HandLandmark.WRIST],
                                              hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
                                              hand_landmarks.landmark[HandLandmark.PINKY_MCP],
@@ -37,13 +43,12 @@ class MediapipeHands:
                                              hand_landmarks.landmark[HandLandmark.RING_FINGER_TIP],
                                              hand_landmarks.landmark[HandLandmark.PINKY_TIP])
 
-                    for dot in dots:
-                        print(dot)
-
-                    self.plotDots(dots)
-            for hand_world_landmarks in result.multi_hand_world_landmarks:
-                mp.solutions.drawing_utils.plot_landmarks(
-                    hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
+                    # for dot in dots:
+                    #     print(dot)
+                    # self.plotDots(dots)
+            # for hand_world_landmarks in result.multi_hand_world_landmarks:
+            #     mp.solutions.drawing_utils.plot_landmarks(
+            #         hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
             return result
 
     def processHandsFromVideo(self):

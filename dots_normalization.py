@@ -13,7 +13,12 @@ def getNormalizedDots(dot_wrist, dot_index_mcp, dot_pinky_mcp,
     # Create "counter" plane to main plane
     counter_pl = Plane()
     pinky_mcp_projection = getDotProjectionOnLine(dot_pinky_mcp, dot_index_mcp, dot_wrist)
-    counter_pl.computePlaneCoefficientsDotAndLine(dot_index_mcp, pinky_mcp_projection, dot_pinky_mcp)
+    counter_pl.computePlaneCoefficientsWithDotAndLine(dot_index_mcp, pinky_mcp_projection, dot_pinky_mcp)
+
+    # Debug info
+    print(f"Main plane: {main_pl}")
+    print(f"Counter plane: {counter_pl}\n")
+    # Debug info
 
     # Compute sign on left side of the counter_plane
     if counter_pl.getPlaneEquation(dot_pinky_mcp) >= 0:
@@ -28,8 +33,19 @@ def getNormalizedDots(dot_wrist, dot_index_mcp, dot_pinky_mcp,
     #       now they are computed 5 times in getProjectionOnLine function
     # Compute new coordinates of given dots
     for index, dot in enumerate(input_dots):
+        print(f"Input dot: {dot}")
+
         projection_on_main_plane = getDotProjectionOnPlane(dot, main_pl)
+
+        # Debug info
+        print(f"Dot projection on plane: {projection_on_main_plane}")
+        # Debug info
+
         projection_on_line = getDotProjectionOnLine(projection_on_main_plane, dot_index_mcp, dot_pinky_mcp)
+
+        # Debug info
+        print(f"Dot projection on line: {projection_on_line}")
+        # Debug info
 
         x = getDistanceBetweenDots(dot_wrist, projection_on_line)
 
@@ -41,5 +57,9 @@ def getNormalizedDots(dot_wrist, dot_index_mcp, dot_pinky_mcp,
         z = getDistanceBetweenDots(projection_on_main_plane, dot)
 
         output_dots[index] = Dot(x, y, z)
+
+        # Debug info
+        print(f"Output dot projection: {output_dots[index]}")
+        # Debug info
 
     return output_dots

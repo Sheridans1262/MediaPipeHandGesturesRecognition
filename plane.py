@@ -31,7 +31,7 @@ class Plane:
         self.d = c1 * (- dot_A.x) - c2 * (- dot_A.y) + c3 * (- dot_A.z)
         # return self.a, self.b, self.c, self.d
 
-    def computePlaneCoefficientsDotAndLine(self, dot_A: Dot, dot_line_a, dot_line_b):
+    def computePlaneCoefficientsWithDotAndLine(self, dot_A: Dot, dot_line_a, dot_line_b):
         """ Compute plane equation Ax+By+Cz+D=0 coefficients by given dot
             and dots of line, using normal vector to plane """
         _, a, _, b, _, c = self.computeLineCoefficients(dot_line_a, dot_line_b)
@@ -67,4 +67,4 @@ class Plane:
         return dot_A.x * self.a + dot_A.y * self.b + dot_A.z * self.c + self.d
 
     def __str__(self):
-        return f"{self.a} {self.b} {self.c} {self.d}"
+        return f"a = {self.a} b = {self.b} c = {self.c} d = {self.d}"
