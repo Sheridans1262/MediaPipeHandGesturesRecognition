@@ -61,13 +61,15 @@ def dotProjectionOnLine(dot_A: Dot, a_top, a_bot, b_top, b_bot, c_top, c_bot):
     """ Get coordinates of a dot_A projection on a line, given by top-bot coefficients"""
     pl = Plane()
     pl.computePlaneCoefficientsWithNormalVector(dot_A, a_bot, b_bot, c_bot)
+    print(f"Counter plane to A: {pl}")
 
     a, b, c, d = pl.a, pl.b, pl.c, pl.d
     # a*-a_top + a*a_bot*lam + b*-b_top + b*b_bot*lam + c*-c_top + c*c_bot*lam + d=0
     lam = (a * a_top + b * b_top + c * c_top - d) / (a * a_bot + b * b_bot + c * c_bot)
-    x = -1 * a_top + a_bot * lam
-    y = -1 * b_top + b_bot * lam
-    z = -1 * c_top + c_bot * lam
+    print(f"Lambda: {lam}")
+    x = a_top + a_bot * lam
+    y = b_top + b_bot * lam
+    z = c_top + c_bot * lam
     return x, y, z
 
 
@@ -75,9 +77,9 @@ def dotProjectionOnLine(dot_A: Dot, a_top, a_bot, b_top, b_bot, c_top, c_bot):
 def computeLineCoefficients(dot_A: Dot, dot_B: Dot):
     """ Compute line equation in (x-x1)/(x2-x1) = (y-y1)/(y2-y1) = (z-z1)/(z2-z1) format, where:
         -x1 = a_top, x2-x1 = a_bot etc. """
-    a_top, a_bot = -1 * dot_A.x, dot_B.x - dot_A.x
-    b_top, b_bot = -1 * dot_A.y, dot_B.y - dot_A.y
-    c_top, c_bot = -1 * dot_A.z, dot_B.z - dot_A.z
+    a_top, a_bot = dot_A.x, dot_B.x - dot_A.x
+    b_top, b_bot = dot_A.y, dot_B.y - dot_A.y
+    c_top, c_bot = dot_A.z, dot_B.z - dot_A.z
     return a_top, a_bot, b_top, b_bot, c_top, c_bot
 
 

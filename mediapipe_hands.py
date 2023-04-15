@@ -1,12 +1,16 @@
+import math
 import time
 
 import cv2
 import mediapipe as mp
 from matplotlib import pyplot as plt
 from mediapipe.python.solutions.hands import HandLandmark
+
+from Actions import doAssociatedAction
+from NeuralNetwork import getGesture
 from extencions import Finger, Dot
 
-from dots_normalization import getNormalizedDots
+from dots_normalization import getNormalizedDots, getAngles
 
 
 class MediapipeHands:
@@ -28,24 +32,21 @@ class MediapipeHands:
 
             if result.multi_hand_landmarks:
                 for hand_landmarks in result.multi_hand_landmarks:
-                    # Debug info
-                    print(f"Wrist: {Dot(hand_landmarks.landmark[HandLandmark.WRIST].x, hand_landmarks.landmark[HandLandmark.WRIST].y, hand_landmarks.landmark[HandLandmark.WRIST].z)}")
-                    print(f"Index mcp: {Dot(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].x, hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].y, hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP].z)}")
-                    print(f"Pinky mcp: {Dot(hand_landmarks.landmark[HandLandmark.PINKY_MCP].x, hand_landmarks.landmark[HandLandmark.PINKY_MCP].y, hand_landmarks.landmark[HandLandmark.PINKY_MCP].z)}\n")
-                    # Debug info
-
-                    dots = getNormalizedDots(hand_landmarks.landmark[HandLandmark.WRIST],
-                                             hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
-                                             hand_landmarks.landmark[HandLandmark.PINKY_MCP],
-                                             hand_landmarks.landmark[HandLandmark.THUMB_TIP],
-                                             hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP],
-                                             hand_landmarks.landmark[HandLandmark.MIDDLE_FINGER_TIP],
-                                             hand_landmarks.landmark[HandLandmark.RING_FINGER_TIP],
-                                             hand_landmarks.landmark[HandLandmark.PINKY_TIP])
-
+                    angles = getAngles(hand_landmarks)
+                    # dots = getNormalizedDots(hand_landmarks.landmark[HandLandmark.WRIST],
+                    #                          hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
+                    #                          hand_landmarks.landmark[HandLandmark.PINKY_MCP],
+                    #                          hand_landmarks.landmark[HandLandmark.THUMB_TIP],
+                    #                          hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP],
+                    #                          hand_landmarks.landmark[HandLandmark.MIDDLE_FINGER_TIP],
+                    #                          hand_landmarks.landmark[HandLandmark.RING_FINGER_TIP],
+                    #                          hand_landmarks.landmark[HandLandmark.PINKY_TIP])
+                    #
                     # for dot in dots:
                     #     print(dot)
                     # self.plotDots(dots)
+                    # for angle in angles:
+                    #     print((angle * 180) / math.pi)
             # for hand_world_landmarks in result.multi_hand_world_landmarks:
             #     mp.solutions.drawing_utils.plot_landmarks(
             #         hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
@@ -53,6 +54,10 @@ class MediapipeHands:
 
     def processHandsFromVideo(self):
         cap = cv2.VideoCapture(0)
+
+        current_gesture = 1
+        current_gesture_counter = 0
+        previous_action = 0
 
         with self.mp_hands.Hands(
                 model_complexity=0,
@@ -69,16 +74,25 @@ class MediapipeHands:
                 # pass by reference.
                 image.flags.writeable = False
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                start = time.perf_counter()
                 results = hands.process(image)
-                # if results.multi_hand_landmarks:
-                #     for hand_landmarks in results.multi_hand_landmarks:
-                #         pl = Plane(hand_landmarks.landmark[HandLandmark.WRIST],
-                #                    hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
-                #                    hand_landmarks.landmark[HandLandmark.PINKY_MCP])
-                #         for i in range(20):
-                #             A_proj = pl.getDotProjectionOnPlane(hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP])
-                #     print(time.perf_counter() - start)
+                if results.multi_hand_landmarks:
+                    for hand_landmarks in results.multi_hand_landmarks:
+                        angles = getAngles(hand_landmarks)
+                        #print((angles[3] * 180) / math.pi)
+                    next_gesture = getGesture(angles)
+                    if next_gesture == current_gesture:
+                        current_gesture_counter += 1
+                    else:
+                        current_gesture_counter = 0
+
+                    current_gesture = next_gesture
+
+                    if current_gesture_counter > 15:
+                        if previous_action != current_gesture:
+                            previous_action = current_gesture
+                            doAssociatedAction(next_gesture)
+                        print(next_gesture)
+                        current_gesture_counter = 0
 
                 self.showImageFromVideo(image, results)
 
