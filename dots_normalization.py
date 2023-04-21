@@ -109,34 +109,15 @@ def getAngles(dots):
 
 
 def computeAnglesForFinger(dot_A, dot_B, dot_C, dot_D, dot_E):
-    # print(f"x:{dot_A.x} y:{dot_A.y} z:{dot_A.z}")
-    # print(f"x:{dot_B.x} y:{dot_B.y} z:{dot_B.z}")
-    # print(f"x:{dot_C.x} y:{dot_C.y} z:{dot_C.z}")
-    # print(f"x:{dot_D.x} y:{dot_D.y} z:{dot_D.z}")
-    # print(f"x:{dot_E.x} y:{dot_E.y} z:{dot_E.z}")
-    # print("\n")
-
     vec_AB = computeVector(dot_A, dot_B)
     vec_BC = computeVector(dot_B, dot_C)
     vec_CD = computeVector(dot_C, dot_D)
     vec_DE = computeVector(dot_D, dot_E)
 
-    # print("vec AB:", vec_AB)
-    # print("vec BC:", vec_BC)
-    # print("vec CD:", vec_CD)
-    # print("vec DE:", vec_DE)
-    # print("\n")
-
     vec_AB_length = vectorLength(vec_AB)
     vec_BC_length = vectorLength(vec_BC)
     vec_CD_length = vectorLength(vec_CD)
     vec_DE_length = vectorLength(vec_DE)
-
-    # print("vec AB length:", vec_AB_length)
-    # print("vec BC length:", vec_BC_length)
-    # print("vec CD length:", vec_CD_length)
-    # print("vec DE length:", vec_DE_length)
-    # print("\n")
 
     angle_1 = math.acos(-vectorsMultiplication(vec_AB, vec_BC) / (vec_AB_length * vec_BC_length))
     angle_2 = math.acos(-vectorsMultiplication(vec_BC, vec_CD) / (vec_BC_length * vec_CD_length))
