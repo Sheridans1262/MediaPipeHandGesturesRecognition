@@ -63,7 +63,6 @@ def pressButton(buttonId):
         if buttonId == 4:
             template = cv2.imread("control images/yandex player controls/prevYandex.png")
 
-
         template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
         template = cv2.Canny(template, 50, 200)
 
@@ -73,12 +72,13 @@ def pressButton(buttonId):
         screenshot = cv2.Canny(screenshot, 50, 200)
 
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF)
-        (_, _, _, maxLoc) = cv2.minMaxLoc(result)
-        clickPos = (maxLoc[0] + (template.shape[1] / 2), maxLoc[1] + (template.shape[0] / 2))
-        print(clickPos)
+        (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
+        if maxVal > 0.8:
+            clickPos = (maxLoc[0] + (template.shape[1] / 2), maxLoc[1] + (template.shape[0] / 2))
+            print(clickPos)
 
-        mousePreviousPos = pyautogui.position()
-        pyautogui.click(clickPos)
-        pyautogui.moveTo(mousePreviousPos)
-    except:
-        print("exception")
+            mousePreviousPos = pyautogui.position()
+            pyautogui.click(clickPos)
+            pyautogui.moveTo(mousePreviousPos)
+    except ValueError:
+        print("Cannot read icon image")

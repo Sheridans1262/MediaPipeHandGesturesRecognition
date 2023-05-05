@@ -33,20 +33,10 @@ class MediapipeHands:
             if result.multi_hand_landmarks:
                 for hand_landmarks in result.multi_hand_landmarks:
                     angles = getAngles(hand_landmarks)
-                    # dots = getNormalizedDots(hand_landmarks.landmark[HandLandmark.WRIST],
-                    #                          hand_landmarks.landmark[HandLandmark.INDEX_FINGER_MCP],
-                    #                          hand_landmarks.landmark[HandLandmark.PINKY_MCP],
-                    #                          hand_landmarks.landmark[HandLandmark.THUMB_TIP],
-                    #                          hand_landmarks.landmark[HandLandmark.INDEX_FINGER_TIP],
-                    #                          hand_landmarks.landmark[HandLandmark.MIDDLE_FINGER_TIP],
-                    #                          hand_landmarks.landmark[HandLandmark.RING_FINGER_TIP],
-                    #                          hand_landmarks.landmark[HandLandmark.PINKY_TIP])
-                    #
-                    # for dot in dots:
-                    #     print(dot)
                     # self.plotDots(dots)
                     # for angle in angles:
                     #     print((angle * 180) / math.pi)
+                    self.showImageFromVideo(image, result)
             # for hand_world_landmarks in result.multi_hand_world_landmarks:
             #     mp.solutions.drawing_utils.plot_landmarks(
             #         hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
