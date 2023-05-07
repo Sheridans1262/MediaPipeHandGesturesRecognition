@@ -1,6 +1,8 @@
 import cv2
 import mediapipe as mp
 import time
+from os import listdir
+from os.path import isfile, join
 
 from dots_normalization import getAngles
 
@@ -25,11 +27,6 @@ def createDatasetForGesture(gestureName: str):
 
         if results.multi_hand_landmarks:
             for handLandmarks in results.multi_hand_landmarks:
-                # landmarks = []
-                # for id, landmark in enumerate(handLandmarks.landmark):
-                #     print(id, landmark)
-                #     landmarks.append(landmark)
-
                 landmarksRaw.append(handLandmarks)
                 mpDraw.draw_landmarks(img, handLandmarks, mpHands.HAND_CONNECTIONS)
 
@@ -51,7 +48,30 @@ def createDatasetForGesture(gestureName: str):
             for node in line:
                 file.write(str(node) + ' ')
             file.write('\n')
-        # file.writelines(gesturesResults)
 
 
-createDatasetForGesture("PointingIndexFinger")
+def extractDatasetFromDirectory(datasetPath: str):
+    directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
+
+    dataset = {}
+    for fileName in directoryFiles:
+        gestureData = []
+
+        with open(f"{datasetPath}/{fileName}", 'r') as file:
+            while True:
+                dataRow = file.readline()
+                if len(dataRow) == 0:
+                    break
+
+                processedDataRow = [float(dataNode) for dataNode in dataRow.split(' ')[0:-1]]
+                gestureData.append(processedDataRow)
+
+        gestureName = ' '.join(fileName.split('.')[:-1])
+
+        dataset.update({gestureName: gestureData})
+
+    return dataset
+
+
+# createDatasetForGesture("FlatPalm")
+extractDatasetFromDirectory("Gestures")
