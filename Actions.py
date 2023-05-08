@@ -4,6 +4,15 @@ import numpy as np
 import mss
 import pyautogui
 
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+from DatasetUtils import extractDatasetFromDirectory
+
+x, y, yLabels = extractDatasetFromDirectory("Gestures")
+clf = RandomForestClassifier()
+clf.fit(x, y)
+
 sct = mss.mss()
 
 

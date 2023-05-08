@@ -69,7 +69,7 @@ class MediapipeHands:
                     for hand_landmarks in results.multi_hand_landmarks:
                         angles = getAngles(hand_landmarks)
                         #print((angles[3] * 180) / math.pi)
-                    next_gesture = getGesture(angles)
+                    next_gesture, next_gesture_name = getGesture(angles)
                     if next_gesture == current_gesture:
                         current_gesture_counter += 1
                     else:
@@ -81,7 +81,7 @@ class MediapipeHands:
                         if previous_action != current_gesture:
                             previous_action = current_gesture
                             doAssociatedAction(next_gesture)
-                        print(next_gesture)
+                        print(next_gesture_name)
                         current_gesture_counter = 0
 
                 self.showImageFromVideo(image, results)

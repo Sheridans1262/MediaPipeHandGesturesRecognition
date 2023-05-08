@@ -4,6 +4,9 @@ import time
 from os import listdir
 from os.path import isfile, join
 
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
 from dots_normalization import getAngles
 
 
@@ -50,7 +53,7 @@ def createDatasetForGesture(gestureName: str):
             file.write('\n')
 
 
-def extractDatasetFromDirectory(datasetPath: str):
+def extractDatasetFromDirectoryUnfinished(datasetPath: str):
     directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
 
     dataset = {}
@@ -73,5 +76,43 @@ def extractDatasetFromDirectory(datasetPath: str):
     return dataset
 
 
+def extractDatasetFromDirectory(datasetPath: str):
+    directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
+
+    yLabels = {}
+
+    x = []
+    y = []
+    for index, fileName in enumerate(directoryFiles):
+        gestureName = ' '.join(fileName.split('.')[:-1])
+        yLabels.update({index: gestureName})
+
+        with open(f"{datasetPath}/{fileName}", 'r') as file:
+            while True:
+                dataRow = file.readline()
+                if len(dataRow) == 0:
+                    break
+
+                processedDataRow = [float(dataNode) for dataNode in dataRow.split(' ')[0:-1]]
+                x.append(processedDataRow)
+                y.append(index)
+
+    print(len(x))
+    # print(x)
+    # print(len(y))
+    # print(y)
+    # print(len(yLabels))
+    # print(yLabels)
+
+    return x, y, yLabels
+
 # createDatasetForGesture("FlatPalm")
-extractDatasetFromDirectory("Gestures")
+# extractDatasetFromDirectory("Gestures")
+x, y, yLabels = extractDatasetFromDirectory("Gestures")
+xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2)
+
+clf = RandomForestClassifier()
+clf.fit(xTrain, yTrain)
+
+print(clf.predict_proba([xTest[-5]]))
+print(yTest[-5])
