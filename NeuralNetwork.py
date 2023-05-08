@@ -8,7 +8,7 @@ clf = RandomForestClassifier()
 clf.fit(x, y)
 
 def getGesture(angles: list):
-    current_gesture = 0
+    current_gesture = -1
 
     # if angles[1] < 2:
     #     current_gesture = 1
@@ -22,6 +22,7 @@ def getGesture(angles: list):
     # if angles[9] < 2:
     #     current_gesture = 4
 
-    current_gesture = clf.predict([angles])[0]
+    gesturesProbs = clf.predict_proba([angles])[0]
+    current_gesture = gesturesProbs.argmax() if max(gesturesProbs) > 0.75 else -1
 
     return current_gesture, yLabels[current_gesture]

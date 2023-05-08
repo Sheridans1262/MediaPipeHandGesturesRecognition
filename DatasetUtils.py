@@ -79,7 +79,7 @@ def extractDatasetFromDirectoryUnfinished(datasetPath: str):
 def extractDatasetFromDirectory(datasetPath: str):
     directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
 
-    yLabels = {}
+    yLabels = {-1: "Unknown gesture"}
 
     x = []
     y = []
@@ -108,11 +108,11 @@ def extractDatasetFromDirectory(datasetPath: str):
 
 # createDatasetForGesture("FlatPalm")
 # extractDatasetFromDirectory("Gestures")
-x, y, yLabels = extractDatasetFromDirectory("Gestures")
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2)
-
-clf = RandomForestClassifier()
-clf.fit(xTrain, yTrain)
-
-print(clf.predict_proba([xTest[-5]]))
-print(yTest[-5])
+# x, y, yLabels = extractDatasetFromDirectory("Gestures")
+# xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2)
+#
+# clf = RandomForestClassifier()
+# clf.fit(xTrain, yTrain)
+#
+# print(clf.predict_proba([xTest[-5]]))
+# print(yTest[-5])

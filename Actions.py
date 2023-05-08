@@ -4,46 +4,41 @@ import numpy as np
 import mss
 import pyautogui
 
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-
-from DatasetUtils import extractDatasetFromDirectory
-
-x, y, yLabels = extractDatasetFromDirectory("Gestures")
-clf = RandomForestClassifier()
-clf.fit(x, y)
-
 sct = mss.mss()
 
 
 def doAssociatedAction(gesture: int):
     match gesture:
-        case 0:
+        case -1:
             return
+        case 0:
+            action0()
         case 1:
             action1()
         case 2:
             action2()
         case 3:
             action3()
-        case 4:
-            action4()
+
+
+def action0():
+    pass
+    # pressButton(1)
 
 
 def action1():
-    pressButton(1)
+    pass
+    # pressButton(2)
 
 
 def action2():
-    pressButton(2)
+    pass
+    # pressButton(3)
 
 
 def action3():
-    pressButton(3)
-
-
-def action4():
-    pressButton(4)
+    pass
+    # pressButton(4)
 
 
 def sendSignalThroughTCP(signal):
