@@ -1,28 +1,70 @@
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-
 from DatasetUtils import extractDatasetFromDirectory
+import time
+
+
+def trainRandomForest():
+    pTime = time.time()
+
+    clf = RandomForestClassifier()
+    clf.fit(x, y)
+    print(f"{time.time() - pTime} seconds")
+
+    return clf
+
+
+from tensorflow import keras
+from keras.models import Sequential
+from keras import layers
+from keras.optimizers import Adagrad
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+
+def trainMultilayerPerceptron2HiddenLayers():
+    xTrain, yTrain, yLabels = extractDatasetFromDirectory("Gestures")
+
+    xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2)
+    xTrain = np.array(xTrain).reshape(int(len(xTrain)), 10).astype('float32')
+    xTest = np.array(xTest).reshape(int(len(xTest)), 10).astype('float32')
+
+    yTrain = np.array(yTrain)
+    yTest = np.array(yTest)
+
+    model = Sequential(
+        [
+            layers.Dense(units=14, input_shape=(10,), activation='relu'),
+            # layers.Dense(units=6, activation='relu'),
+            layers.Dense(units=len(yLabels) - 1, activation='softmax')
+        ]
+    )
+
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+    model.fit(xTrain, yTrain, batch_size=15, epochs=10, shuffle=True, verbose=2)
+
+    scores = model.evaluate(xTest, yTest)
+
+    print(scores)
+    model.summary()
+
+    return model
+
+
 
 x, y, yLabels = extractDatasetFromDirectory("Gestures")
-clf = RandomForestClassifier()
-clf.fit(x, y)
+
+clf = trainMultilayerPerceptron2HiddenLayers()
 
 def getGesture(angles: list):
-    current_gesture = -1
+    # SEQUENTIAL MODELS
+    gesturesProbs = clf.predict([angles], verbose=0)[0]
 
-    # if angles[1] < 2:
-    #     current_gesture = 1
-    #
-    # if angles[3] < 2:
-    #     current_gesture = 2
-    #
-    # if angles[5] < 2:
-    #     current_gesture = 3
-    #
-    # if angles[9] < 2:
-    #     current_gesture = 4
+    # RANDOM FOREST
+    # gesturesProbs = clf.predict_proba([angles])[0]
 
-    gesturesProbs = clf.predict_proba([angles])[0]
-    current_gesture = gesturesProbs.argmax() if max(gesturesProbs) > 0.75 else -1
+    print(gesturesProbs)
+    current_gesture = gesturesProbs.argmax() if max(gesturesProbs) > 0.8 else -1
 
     return current_gesture, yLabels[current_gesture]
+

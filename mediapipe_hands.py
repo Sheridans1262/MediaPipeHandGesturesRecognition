@@ -51,6 +51,7 @@ class MediapipeHands:
 
         with self.mp_hands.Hands(
                 model_complexity=0,
+                max_num_hands=1,
                 min_detection_confidence=0.5,
                 min_tracking_confidence=0.5) as hands:
             while cap.isOpened():
@@ -102,9 +103,7 @@ class MediapipeHands:
                 mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
-                    self.mp_hands.HAND_CONNECTIONS,
-                    mp_drawing_styles.get_default_hand_landmarks_style(),
-                    mp_drawing_styles.get_default_hand_connections_style())
+                    self.mp_hands.HAND_CONNECTIONS)
         cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
 
     def plotDots(self, dots):
