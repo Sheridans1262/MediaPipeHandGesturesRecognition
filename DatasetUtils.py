@@ -7,7 +7,7 @@ from os.path import isfile, join
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
-from dots_normalization import getAngles
+from AnglesExtencion import getAngles
 
 
 def createDatasetForGesture(gestureName: str):
@@ -106,7 +106,7 @@ def extractDatasetFromDirectory(datasetPath: str):
 
     return x, y, yLabels
 
-# createDatasetForGesture("FlatPalm")
+# createDatasetForGesture("Fist")
 # extractDatasetFromDirectory("Gestures")
 # x, y, yLabels = extractDatasetFromDirectory("Gestures")
 # xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2)

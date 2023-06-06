@@ -7,10 +7,10 @@ from matplotlib import pyplot as plt
 from mediapipe.python.solutions.hands import HandLandmark
 
 from Actions import doAssociatedAction
-from NeuralNetwork import getGesture
-from extencions import Finger, Dot
+from Classifier import getGesture
+from DataClasses import Finger, Dot
 
-from dots_normalization import getNormalizedDots, getAngles
+from AnglesExtencion import getAngles
 
 
 class MediapipeHands:

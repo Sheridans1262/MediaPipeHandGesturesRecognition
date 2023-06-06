@@ -1,11 +1,8 @@
 from math import sqrt
 
-from mediapipe_hands import MediapipeHands
-from plane import Plane
-from extencions import Dot
+from MediapipeHands import MediapipeHands
+from DataClasses import Dot
 import time
-from knn_algorithm import KNN
-
 
 
 def main():
