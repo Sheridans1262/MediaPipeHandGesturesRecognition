@@ -18,7 +18,6 @@ def trainRandomForest():
 from tensorflow import keras
 from keras.models import Sequential
 from keras import layers
-from keras.optimizers import Adagrad
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -34,7 +33,6 @@ def trainMultilayerPerceptron():
     model = Sequential(
         [
             layers.Dense(units=26, input_shape=(10,), activation='relu'),
-            # layers.Dense(units=6, activation='relu'),
             layers.Dense(units=len(yLabels) - 1, activation='softmax')
         ]
     )
@@ -49,7 +47,6 @@ def trainMultilayerPerceptron():
     model.summary()
 
     return model
-
 
 
 x, y, yLabels = extractDatasetFromDirectory("Gestures")

@@ -53,29 +53,6 @@ def createDatasetForGesture(gestureName: str):
             file.write('\n')
 
 
-def extractDatasetFromDirectoryUnfinished(datasetPath: str):
-    directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
-
-    dataset = {}
-    for fileName in directoryFiles:
-        gestureData = []
-
-        with open(f"{datasetPath}/{fileName}", 'r') as file:
-            while True:
-                dataRow = file.readline()
-                if len(dataRow) == 0:
-                    break
-
-                processedDataRow = [float(dataNode) for dataNode in dataRow.split(' ')[0:-1]]
-                gestureData.append(processedDataRow)
-
-        gestureName = ' '.join(fileName.split('.')[:-1])
-
-        dataset.update({gestureName: gestureData})
-
-    return dataset
-
-
 def extractDatasetFromDirectory(datasetPath: str):
     directoryFiles = [file for file in listdir(datasetPath) if isfile(join(datasetPath, file))]
 

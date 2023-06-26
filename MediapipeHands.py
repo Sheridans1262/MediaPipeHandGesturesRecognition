@@ -37,9 +37,9 @@ class MediapipeHands:
                     # for angle in angles:
                     #     print((angle * 180) / math.pi)
                     self.showImageFromVideo(image, result)
-            # for hand_world_landmarks in result.multi_hand_world_landmarks:
-            #     mp.solutions.drawing_utils.plot_landmarks(
-            #         hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
+            for hand_world_landmarks in result.multi_hand_world_landmarks:
+                mp.solutions.drawing_utils.plot_landmarks(
+                    hand_world_landmarks, self.mp_hands.HAND_CONNECTIONS, azimuth=5)
             return result
 
     def processHandsFromVideo(self):

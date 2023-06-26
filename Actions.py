@@ -23,22 +23,22 @@ def doAssociatedAction(gesture: int):
 
 def action0():
     pass
-    # pressButton(1)
+    pressButton(1)
 
 
 def action1():
     pass
-    # pressButton(2)
+    pressButton(2)
 
 
 def action2():
     pass
-    # pressButton(3)
+    pressButton(3)
 
 
 def action3():
     pass
-    # pressButton(4)
+    pressButton(4)
 
 
 def sendSignalThroughTCP(signal):
@@ -77,7 +77,7 @@ def pressButton(buttonId):
 
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF)
         (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
-        if maxVal > 0.8:
+        if maxVal > 0.9:
             clickPos = (maxLoc[0] + (template.shape[1] / 2), maxLoc[1] + (template.shape[0] / 2))
             print(clickPos)
 
